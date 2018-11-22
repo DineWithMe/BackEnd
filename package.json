@@ -21,6 +21,9 @@
     "deploy-dev": "prisma deploy  -e ./.config/dev.env",
     "deploy-prod": "prisma deploy -e ./.config/prod.env",
     "deploy-test": "prisma deploy -e ./.config/test.env",
+    "token-dev": "prisma token  -e ./.config/dev.env",
+    "token-prod": "prisma token -e ./.config/prod.env",
+    "token-test": "prisma token -e ./.config/test.env",
     "docker-down": "env-cmd ./.config/dev.env docker-compose -f ./prisma/docker-compose.yml down",
     "docker-up": "env-cmd ./.config/dev.env docker-compose -f ./prisma/docker-compose.yml up -d"
   },
