@@ -25,3 +25,5 @@ And BOOM, with just one script, our graphql playground is up and running, waitin
 Note: npm run setup is for first time setup only, please explore other scripts to run the command you need.
 Note1: if you are facing port is already allocated error, it is most likely you have postgres installed and running with default port, change PSQL_PORT in ./config/dev.env
 Note2: to shut down container: npm run docker-down
+
+Lastly, credit for Udemy instructor Andrew Mead, this boilerplate is heavily modified version of Andrew's boilerplate
