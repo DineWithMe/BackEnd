@@ -1,12 +1,9 @@
 {
-  "name": "graphql_prisma_backend_boilerplate",
+  "name": "prisma-example-app",
   "version": "1.0.0",
-  "description": "graphql_prisma_backend_boilerplate",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/tylim88/Graphql-Prisma-BackEnd-Boilerplate.git"
-  },
+  "description": "prisma-example-app",
+  "author": "",
+  "license": "ISC",
   "scripts": {
     "separator-0": "-----------------------------------------------------basic-----------------------------------------------------------------------",
     "start": "npm run build && node dist/index.js",
@@ -19,7 +16,7 @@
     "schema": "prisma generate",
     "token": "prisma token",
     "volume": "cross-env-shell \"docker volume create $DOCKER_VOLUME\"",
-    "down": "docker-compose down",
+    "down": "docker-compose down --remove-orphans",
     "playground": "cross-env-shell \"./node_modules/.bin/opn $NODE_ENDPOINT\"",
     "wait-prisma": "cross-env-shell \"sleep 12\"",
     "separator-1": "-----------------------------------------------------jest------------------------------------------------------------------------",
@@ -63,12 +60,6 @@
     "dev-tail": "env-cmd ./.config/dev.env docker-compose -f ./docker-compose-dev.yml up",
     "dev-down": "env-cmd ./.config/dev.env npm run down"
   },
-  "jest": {
-    "globalSetup": "./tests/jest/globalSetup.js",
-    "globalTeardown": "./tests/jest/globalTeardown.js"
-  },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "apollo-boost": "^0.1.21",
@@ -108,6 +99,10 @@
     "presets": [
       "@babel/preset-env"
     ]
+  },
+  "jest": {
+    "globalSetup": "./tests/jest/globalSetup.js",
+    "globalTeardown": "./tests/jest/globalTeardown.js"
   },
   "prettier": {
     "eslintIntegration": true,

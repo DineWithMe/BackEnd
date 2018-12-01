@@ -1,7 +1,5 @@
 import getUserId from '../utils/getUserId'
 
-const Subscription = {
-    
-}
+const Subscription = {}
 
 export { Subscription as default }
