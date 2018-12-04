@@ -1,9 +1,16 @@
 {
-  "name": "prisma-example-app",
+  "name": "dwm-backend",
   "version": "1.0.0",
-  "description": "prisma-example-app",
+  "description": "dwm-backend",
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DineWithMe/BackEnd"
+  },
+  "bugs": {
+    "url": "https://github.com/DineWithMe/BackEnd/issues"
+  },
   "scripts": {
     "separator-0": "-----------------------------------------------------basic-----------------------------------------------------------------------",
     "start": "npm run build && node dist/index.js",
@@ -18,7 +25,7 @@
     "volume": "cross-env-shell \"docker volume create $DOCKER_VOLUME\"",
     "down": "docker-compose down --remove-orphans",
     "playground": "cross-env-shell \"./node_modules/.bin/opn $NODE_ENDPOINT\"",
-    "wait-prisma": "cross-env-shell \"sleep 12\"",
+    "wait-prisma": "cross-env-shell \"sleep 20\"",
     "separator-1": "-----------------------------------------------------jest------------------------------------------------------------------------",
     "jest": "npm run build && env-cmd ./.config/jest.env jest --watch --runInBand",
     "jest-ci": "npm run build && env-cmd ./.config/jest.env jest --runInBand",
