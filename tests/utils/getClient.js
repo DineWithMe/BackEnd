@@ -6,7 +6,7 @@ import { onError } from 'apollo-link-error'
 import { ApolloLink, Observable } from 'apollo-link'
 import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
-
+/* eslint-disable no-alert, no-console */
 const getClient = (
   jwt,
   httpURL = 'http://localhost:4000',

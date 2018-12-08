@@ -4,7 +4,7 @@ import generateToken from '../utils/generateToken'
 import hashPassword from '../utils/hashPassword'
 
 const Mutation = {
-  async createUser(parent, args, { prisma }, info) {
+  async createUser(parent, args, { prisma }) {
     const password = await hashPassword(args.data.password)
     const user = await prisma.mutation.createUser({
       data: {
@@ -18,7 +18,7 @@ const Mutation = {
       token: generateToken(user.id),
     }
   },
-  async login(parent, args, { prisma }, info) {
+  async login(parent, args, { prisma }) {
     const user = await prisma.query.user({
       where: {
         email: args.data.email,
