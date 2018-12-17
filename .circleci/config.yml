@@ -1,17 +1,27 @@
-# circle ci env var is same as test.env
 version: 2
 jobs:
-  test:
+  lint:
     docker:
       - image: circleci/node:8.12
     steps:
       - checkout
       - run: echo "npm installing"
-      - run: npm install
-      - run: echo "test-ci"
+      - run: npm i
+      - run: echo "lint"
+      - run: CI=true npm run lint
+  test:
+    docker:
+      - image: circleci/node:8.12
+    steps:
+      - checkout
+      - run: echo "npm installing" # encho = printout
+      - run: npm i
+      - run: echo "jest-ci"
       - run: CI=true npm run jest-ci # example:CI=true inject env variable CI = true
 workflows:
   version: 2
   build_test_and_lint: # workflow name
     jobs:
-      #- test # run parallel
+      - test:
+          requires: # test job require hithere job to finish and succed
+            - lint

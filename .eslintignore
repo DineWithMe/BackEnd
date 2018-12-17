@@ -2,8 +2,6 @@
 node_modules/
 
 # environment
-.config/prod.env
-.config/test.env
 Caddyfile
 
 # production

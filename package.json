@@ -1,16 +1,18 @@
 {
-  "name": "graphql_prisma_backend_boilerplate",
+  "name": "dwm-backend",
   "version": "1.0.0",
-  "description": "graphql_prisma_backend_boilerplate",
-  "main": "index.js",
+  "description": "dwm-backend",
+  "author": "",
+  "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tylim88/Graphql-Prisma-BackEnd-Boilerplate.git"
+    "url": "https://github.com/DineWithMe/BackEnd"
+  },
+  "bugs": {
+    "url": "https://github.com/DineWithMe/BackEnd/issues"
   },
   "scripts": {
     "separator-0": "-----------------------------------------------------basic-----------------------------------------------------------------------",
-    "jest": "jest --watch --runInBand",
-    "jest-ci": "jest --runInBand",
     "start": "npm run build && node dist/index.js",
     "build": "babel src --out-dir dist --copy-files",
     "dbuild": "docker-compose build",
@@ -21,53 +23,55 @@
     "schema": "prisma generate",
     "token": "prisma token",
     "volume": "cross-env-shell \"docker volume create $DOCKER_VOLUME\"",
-    "down": "docker-compose down",
+    "down": "docker-compose down --remove-orphans",
     "playground": "cross-env-shell \"./node_modules/.bin/opn $NODE_ENDPOINT\"",
-    "wait-prisma": "cross-env-shell \"sleep 12\"",
-    "separator-1": "-----------------------------------------------------prod------------------------------------------------------------------------",
-    "prod-setup": "npm run prod-build && npm run prod-up && node ./terminalString/dev.js",
+    "wait-prisma": "cross-env-shell \"sleep 20\"",
+    "lint": "eslint . --ext .js --ext .gql --ext .graphql",
+    "lint-fix": "eslint . --ext .js --ext .gql --ext .graphql --fix",
+    "separator-1": "-----------------------------------------------------jest------------------------------------------------------------------------",
+    "jest-dev": "npm run build && env-cmd ./.config/jest_dev.env jest --watch --runInBand",
+    "jest-test": "npm run build && env-cmd ./.config/jest_test.env jest --runInBand",
+    "jest-ci": "npm run build && env-cmd ./.config/jest.env jest --runInBand",
+    "separator-2": "-----------------------------------------------------prod------------------------------------------------------------------------",
+    "prod-setup": "npm run prod-volume && npm run prod-build && npm run prod-up && node ./terminalString/mprod.js",
     "prod-start": "npm run wait-prisma && npm run prod-deploy && env-cmd ./.config/prod.env npm run start",
     "prod-deploy": "env-cmd ./.config/prod.env npm run deploy && npm run prod-schema",
     "prod-schema": "env-cmd ./.config/prod.env npm run schema",
     "prod-token": "env-cmd ./.config/prod.env npm run token",
+    "prod-volume": "env-cmd ./.config/prod.env npm run volume",
     "prod-build": "env-cmd ./.config/prod.env npm run dbuild",
     "prod-rebuild": "env-cmd ./.config/prod.env npm run rebuild",
     "prod-up": "env-cmd ./.config/prod.env npm run up",
     "prod-tail": "env-cmd ./.config/prod.env npm run tail",
     "prod-down": "env-cmd ./.config/prod.env npm run down",
-    "separator-2": "---------------------------------------------------test---------------------------------------------------------------------------",
-    "test-setup": "npm run test-build && npm run test-up && node ./terminalString/test.js && npm run wait-prisma && env-cmd ./.config/test.env npm run playground",
+    "separator-3": "---------------------------------------------------test---------------------------------------------------------------------------",
+    "test-setup": "npm run test-volume && npm run test-build && npm run test-up && node ./terminalString/mtest.js && npm run wait-prisma && env-cmd ./.config/test.env npm run playground",
     "test-start": "npm run wait-prisma && npm run test-deploy && env-cmd ./.config/test.env npm run start",
     "test-deploy": "env-cmd ./.config/test.env npm run deploy && npm run test-schema",
     "test-schema": "env-cmd ./.config/test.env npm run schema",
     "test-token": "env-cmd ./.config/test.env npm run token",
+    "test-volume": "env-cmd ./.config/test.env npm run volume",
     "test-build": "env-cmd ./.config/test.env npm run dbuild",
     "test-rebuild": "env-cmd ./.config/test.env npm run rebuild",
     "test-up": "env-cmd ./.config/test.env npm run up",
     "test-tail": "env-cmd ./.config/test.env npm run tail",
     "test-down": "env-cmd ./.config/test.env npm run down",
-    "separator-3": "-------------------------------------------------------dev-------------------------------------------------------------------------",
-    "dev-setup": "npm run dev-build && npm run dev-up && cross-env-shell \"sleep 3\" && npm run dev-deploy && concurrently \"npm run dev-start\" \"npm run dev-browse\"",
+    "separator-4": "-------------------------------------------------------dev-------------------------------------------------------------------------",
+    "dev-setup": "npm run dev-volume && npm run dev-build && npm run dev-up && cross-env-shell \"sleep 3\" && npm run dev-deploy && concurrently \"npm run dev-start\" \"npm run dev-browse\"",
     "dev-ready": "concurrently \"npm run dev-up\" \"npm run dev-start\" \"npm run dev-browse\"",
     "dev-start": "env-cmd ./.config/dev.env npm start",
-    "dev-browse": "cross-env-shell \"sleep 3\" && node ./terminalString/dev.js && cross-env-shell \"sleep 5\" && env-cmd ./.config/dev.env npm run playground",
-    "dev-jest": "env-cmd ./.config/test.env npm run jest",
+    "dev-browse": "cross-env-shell \"sleep 3\" && node ./terminalString/mdev.js && cross-env-shell \"sleep 5\" && env-cmd ./.config/dev.env npm run playground",
     "dev-nodemon": "env-cmd ./.config/dev.env nodemon src/index.js --ext js,graphql --exec babel-node",
     "dev-deploy": "env-cmd ./.config/dev.env npm run deploy && npm run dev-schema",
     "dev-schema": "env-cmd ./.config/dev.env npm run schema",
     "dev-token": "env-cmd ./.config/dev.env npm run token",
+    "dev-volume": "env-cmd ./.config/dev.env npm run volume",
     "dev-build": "env-cmd ./.config/dev.env docker-compose -f ./docker-compose-dev.yml build",
     "dev-rebuild": "env-cmd ./.config/dev.env docker-compose -f ./docker-compose-dev.yml build --no-cache",
     "dev-up": "env-cmd ./.config/dev.env docker-compose -f ./docker-compose-dev.yml up -d",
     "dev-tail": "env-cmd ./.config/dev.env docker-compose -f ./docker-compose-dev.yml up",
     "dev-down": "env-cmd ./.config/dev.env npm run down"
   },
-  "jest": {
-    "globalSetup": "./tests/jest/globalSetup.js",
-    "globalTeardown": "./tests/jest/globalTeardown.js"
-  },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "apollo-boost": "^0.1.21",
@@ -79,7 +83,6 @@
     "apollo-link-ws": "^1.0.9",
     "apollo-utilities": "^1.0.25",
     "bcrypt": "^3.0.2",
-    "cross-fetch": "^2.2.3",
     "graphql": "^0.13.2",
     "graphql-yoga": "^1.16.7",
     "jsonwebtoken": "^8.4.0",
@@ -93,9 +96,15 @@
     "@babel/preset-env": "^7.1.6",
     "@babel/register": "^7.0.0",
     "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
     "concurrently": "^4.1.0",
     "cross-env": "^5.2.0",
     "env-cmd": "^8.0.2",
+    "eslint": "^5.10.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-graphql": "^3.0.1",
+    "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-prettier": "^3.0.0",
     "husky": "^1.1.4",
     "jest": "^23.6.0",
     "nodemon": "^1.18.6",
@@ -109,6 +118,10 @@
       "@babel/preset-env"
     ]
   },
+  "jest": {
+    "globalSetup": "./tests/jest/globalSetup.js",
+    "globalTeardown": "./tests/jest/globalTeardown.js"
+  },
   "prettier": {
     "eslintIntegration": true,
     "singleQuote": true,
@@ -121,5 +134,26 @@
     "hooks": {
       "pre-commit": "pretty-quick --staged"
     }
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "env": {
+      "es6": true,
+      "node": true,
+      "jest/globals": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module"
+    },
+    "plugins": [
+      "graphql",
+      "jest"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:prettier/recommended",
+      "plugin:jest/recommended"
+    ]
   }
 }
