@@ -9,8 +9,8 @@ import { getMainDefinition } from 'apollo-utilities'
 /* eslint-disable no-alert, no-console */
 const getClient = (
   jwt,
-  httpURL = 'http://localhost:4000',
-  websocketURL = 'ws://localhost:4000'
+  httpURL = process.env.NODE_ENDPOINT,
+  websocketURL = `ws://localhost:${process.env.NODE_PORT}`
 ) => {
   // Setup the authorization header for the http client
   const request = async (operation) => {
