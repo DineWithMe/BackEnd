@@ -1,5 +1,6 @@
 import getUserId from '../utils/getUserId'
-import serverAcceptsEmail from 'server-accepts-email'
+import fetch from 'node-fetch'
+// import serverAcceptsEmail from 'server-accepts-email'
 
 const Query = {
   users(parent, args, { prisma }, info) {
@@ -42,9 +43,13 @@ const Query = {
     )
   },
   async emailExist(parent, args, { prisma }, info) {
-    const emailExist = await serverAcceptsEmail(args.query)
+    const emailExist = await fetch(
+      `https://app.verify-email.org/api/v1/${
+        process.env.VERIFY_EMAIL_API
+      }/verify/${args.query}`
+    ).then((res) => res.json())
 
-    if (!emailExist) throw new Error('email is not exist')
+    if (emailExist.status !== 1) throw new Error('email is not exist')
 
     return prisma.query.user(
       {
