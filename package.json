@@ -33,7 +33,7 @@
     "jest-test": "npm run build && env-cmd ./.config/jest_test.env jest --runInBand",
     "jest-ci": "npm run build && env-cmd ./.config/jest.env jest --runInBand",
     "separator-2": "-----------------------------------------------------prod------------------------------------------------------------------------",
-    "prod-setup": "npm run prod-volume && npm run prod-build && npm run prod-up && node ./terminalString/mprod.js",
+    "prod-setup": "npm run prod-schema && npm run prod-volume && npm run prod-build && npm run prod-up && node ./terminalString/mprod.js",
     "prod-start": "npm run wait-prisma && npm run prod-deploy && env-cmd ./.config/prod.env npm run start",
     "prod-deploy": "env-cmd ./.config/prod.env npm run deploy && npm run prod-schema",
     "prod-schema": "env-cmd ./.config/prod.env npm run schema",
@@ -45,7 +45,7 @@
     "prod-tail": "env-cmd ./.config/prod.env npm run tail",
     "prod-down": "env-cmd ./.config/prod.env npm run down",
     "separator-3": "---------------------------------------------------test---------------------------------------------------------------------------",
-    "test-setup": "npm run test-volume && npm run test-build && npm run test-up && node ./terminalString/mtest.js && npm run wait-prisma && env-cmd ./.config/test.env npm run playground",
+    "test-setup": "npm run test-schema && npm run test-volume && npm run test-build && npm run test-up && node ./terminalString/mtest.js && npm run wait-prisma && env-cmd ./.config/test.env npm run playground",
     "test-start": "npm run wait-prisma && npm run test-deploy && env-cmd ./.config/test.env npm run start",
     "test-deploy": "env-cmd ./.config/test.env npm run deploy && npm run test-schema",
     "test-schema": "env-cmd ./.config/test.env npm run schema",
@@ -83,11 +83,13 @@
     "apollo-link-ws": "^1.0.9",
     "apollo-utilities": "^1.0.25",
     "bcrypt": "^3.0.2",
+    "email-existence": "^0.1.6",
     "graphql": "^0.13.2",
     "graphql-yoga": "^1.16.7",
     "jsonwebtoken": "^8.4.0",
     "prisma-binding": "^2.2.1",
-    "subscriptions-transport-ws": "^0.9.15"
+    "subscriptions-transport-ws": "^0.9.15",
+    "validator": "^10.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",
