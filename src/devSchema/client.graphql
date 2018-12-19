@@ -9,6 +9,8 @@ type Query {
     orderBy: UserOrderByInput
   ): [User!]!
   me: User!
+  userExist(query: String): User
+  emailExist(query: String): User
 }
 
 type Mutation {
@@ -31,6 +33,7 @@ input CreateUserInput {
   name: String!
   email: String!
   password: String!
+  username: String!
 }
 
 input LoginUserInput {
@@ -48,6 +51,7 @@ type User {
   id: ID!
   name: String!
   email: String
+  username: String!
   password: String!
   updatedAt: String!
   createdAt: String!
