@@ -83,11 +83,11 @@
     "apollo-link-ws": "^1.0.9",
     "apollo-utilities": "^1.0.25",
     "bcrypt": "^3.0.2",
-    "email-existence": "^0.1.6",
     "graphql": "^0.13.2",
     "graphql-yoga": "^1.16.7",
     "jsonwebtoken": "^8.4.0",
     "prisma-binding": "^2.2.1",
+    "server-accepts-email": "^1.11.1",
     "subscriptions-transport-ws": "^0.9.15",
     "validator": "^10.9.0"
   },

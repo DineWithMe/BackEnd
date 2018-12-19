@@ -14,6 +14,7 @@ test('Should create a new user', async () => {
       name: 'Andrew',
       email: 'andrew@example.com',
       password: 'MyPass123',
+      username: 'Andrew',
     },
   }
   const response = await client.mutate({
@@ -32,7 +33,7 @@ test('Should expose public author profiles', async () => {
   const response = await client.query({ query: getUsers })
 
   expect(response.data.users[0].email).toBe(null)
-  expect(response.data.users[0].name).toBe('Jen')
+  expect(response.data.users[0].name).toBe('jen')
   expect(response.data.users.length).toBe(2)
 })
 

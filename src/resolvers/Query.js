@@ -1,4 +1,5 @@
 import getUserId from '../utils/getUserId'
+import serverAcceptsEmail from 'server-accepts-email'
 
 const Query = {
   users(parent, args, { prisma }, info) {
@@ -29,6 +30,30 @@ const Query = {
         id: userId,
       },
     })
+  },
+  async userExist(parent, args, { prisma }, info) {
+    return prisma.query.user(
+      {
+        where: {
+          username: args.query,
+        },
+      },
+      info
+    )
+  },
+  async emailExist(parent, args, { prisma }, info) {
+    const emailExist = await serverAcceptsEmail(args.query)
+
+    if (!emailExist) throw new Error('email is not exist')
+
+    return prisma.query.user(
+      {
+        where: {
+          email: args.query,
+        },
+      },
+      info
+    )
   },
 }
 
