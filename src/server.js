@@ -28,7 +28,7 @@ server.express.get('/mailchimp', (req, res) => {
   handleMailChimp(req, res)
 })
 server.express.post('/mailchimp', (req, res) => {
-  res.json('success')
+  res.status(200).json('success')
 })
 
 export { server as default }
