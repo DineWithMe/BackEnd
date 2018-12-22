@@ -5,7 +5,7 @@ import prisma from '../../src/prismaBinding'
 const userOne = {
   input: {
     name: 'jen',
-    email: 'jen123@gmail.com',
+    email: 'jen123@example.com',
     password: bcrypt.hashSync('Red098!@#$', bcrypt.genSaltSync(10)),
     username: 'jen',
   },
@@ -16,7 +16,7 @@ const userOne = {
 const userTwo = {
   input: {
     name: 'jeff',
-    email: 'jeff123@gmail.com',
+    email: 'jeff123@example.com',
     password: bcrypt.hashSync('PassForJeff', bcrypt.genSaltSync(10)),
     username: 'jeff',
   },

@@ -2,16 +2,28 @@ import bcrypt from 'bcrypt'
 import getUserId from '../utils/getUserId'
 import generateToken from '../utils/generateToken'
 import hashPassword from '../utils/hashPassword'
+import request from 'superagent'
 
 const Mutation = {
   async createUser(parent, args, { prisma }) {
+    ;(process.env.ENV === 'test' || process.env.ENV === 'prod') &&
+      (await request
+        .post(`${process.env.SUBSCRIPTION_SERVER}`)
+        .send(`EMAIL=${args.data.email}`)
+        .catch((err) => {
+          throw new Error(err.message)
+        }))
     const password = await hashPassword(args.data.password)
-    const user = await prisma.mutation.createUser({
-      data: {
-        ...args.data,
-        password,
-      },
-    })
+    const user = await prisma.mutation
+      .createUser({
+        data: {
+          ...args.data,
+          password,
+        },
+      })
+      .catch((err) => {
+        throw new Error(err.message)
+      })
 
     return {
       user,
