@@ -88,10 +88,10 @@
     "graphql": "^0.13.2",
     "graphql-yoga": "^1.16.7",
     "jsonwebtoken": "^8.4.0",
-    "node-fetch": "^2.3.0",
     "prisma-binding": "^2.2.1",
     "server-accepts-email": "^1.11.1",
     "subscriptions-transport-ws": "^0.9.15",
+    "superagent": "^4.0.0",
     "validator": "^10.9.0"
   },
   "devDependencies": {
