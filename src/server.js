@@ -24,11 +24,12 @@ server.express.use(cors())
 
 server.express.use(bodyParser.urlencoded())
 
+// MailChimp need both get and post request
 server.express.get('/emailConfirmation', (req, res) => {
   emailConfirmation(req, res)
 })
 server.express.post('/emailConfirmation', (req, res) => {
-  res.status(200).json('success')
+  emailConfirmation(req, res)
 })
 
 export { server as default }
