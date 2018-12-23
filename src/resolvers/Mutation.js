@@ -6,7 +6,9 @@ import request from 'superagent'
 
 const Mutation = {
   async createUser(parent, args, { prisma }) {
-    ;(process.env.ENV === 'test' || process.env.ENV === 'prod') &&
+    ;(process.env.ENV === 'test' ||
+      process.env.ENV === 'prod' ||
+      process.env.ENV === 'dev') &&
       (await request
         .post(`${process.env.SUBSCRIPTION_SERVER}`)
         .send(`EMAIL=${args.data.email}`)
