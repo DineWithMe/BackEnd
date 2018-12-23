@@ -34,7 +34,7 @@ input CreateUserInput {
   email: String!
   password: String!
   username: String!
-  recaptcha: String!
+  recaptchaToken: String!
 }
 
 input LoginUserInput {

@@ -45,7 +45,7 @@ const Query = {
   async emailExist(parent, args, { prisma }, info) {
     const emailExist = await request.get(
       `https://app.verify-email.org/api/v1/${
-        process.env.VERIFY_EMAIL_API
+        process.env.VERIFY_EMAIL_APIKEY
       }/verify/${args.query}`
     )
 

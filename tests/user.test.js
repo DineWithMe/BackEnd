@@ -11,10 +11,12 @@ test('Should create a new user', async () => {
   jest.setTimeout(100000)
   const variables = {
     data: {
+      // this data must follow client side schema not prisma schema
       name: 'Andrew',
       email: 'andrew@example.com',
       password: 'MyPass123',
       username: 'Andrew',
+      recaptchaToken: '',
     },
   }
   const response = await client.mutate({
