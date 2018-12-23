@@ -6,28 +6,31 @@ import request from 'superagent'
 
 const Mutation = {
   async createUser(parent, args, { prisma }) {
-    const recaptchaVerify = await request
-      .post(
-        `https://www.google.com/recaptcha/api/siteverify?secret=${
-          process.env.RECAPTCHA_SECRET
-        }&response={args.data.recaptchaToken}`
-      )
-      .catch((err) => {
-        throw new Error(err.message)
-      })
-    if (recaptchaVerify.success !== true) {
-      throw new Error('recaptcha verification failed')
-    }
-    delete args.data.recaptchaToken
-    ;(process.env.ENV === 'test' ||
+    if (
+      process.env.ENV === 'test' ||
       process.env.ENV === 'prod' ||
-      process.env.ENV === 'dev') &&
-      (await request
+      process.env.ENV === 'dev'
+    ) {
+      const recaptchaVerify = await request
+        .post(
+          `https://www.google.com/recaptcha/api/siteverify?secret=${
+            process.env.RECAPTCHA_SECRET
+          }&response=${args.data.recaptchaToken}`
+        )
+        .catch((err) => {
+          throw new Error(err.message)
+        })
+      if (recaptchaVerify.body.success !== true) {
+        throw new Error('recaptcha verification failed')
+      }
+      await request
         .post(`${process.env.SUBSCRIPTION_SERVER}`)
         .send(`EMAIL=${args.data.email}`)
         .catch((err) => {
           throw new Error(err.message)
-        }))
+        })
+    }
+    delete args.data.recaptchaToken
     const password = await hashPassword(args.data.password)
     const user = await prisma.mutation
       .createUser({

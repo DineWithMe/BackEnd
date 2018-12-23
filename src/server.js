@@ -1,7 +1,6 @@
 import { GraphQLServer, PubSub } from 'graphql-yoga'
 import { resolvers, fragmentReplacements } from './resolvers/index'
 import { emailConfirmation } from './controller/emailConfirmation'
-import cors from 'cors'
 import bodyParser from 'body-parser'
 import prisma from './prismaBinding'
 
@@ -19,8 +18,6 @@ const server = new GraphQLServer({
   },
   fragmentReplacements,
 })
-
-server.express.use(cors())
 
 server.express.use(bodyParser.urlencoded())
 

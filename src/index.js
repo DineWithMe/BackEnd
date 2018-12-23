@@ -1,7 +1,9 @@
 import '@babel/polyfill/noConflict'
 import server from './server'
 
-const whitelist = ['https://dinewithme.app', 'http://localhost:3000']
+const whitelist = ['https://dinewithme.app', 'http://localhost:3000', undefined]
+
+// undefined origin indicate no origin(from itself) https://github.com/expressjs/cors/issues/118
 
 server.start(
   {
