@@ -4,6 +4,7 @@ type User {
   username: String! @unique
   email: String! @unique
   password: String!
+  emailVerified: Boolean! @default(value: false)
   updatedAt: DateTime!
   createdAt: DateTime!
 }

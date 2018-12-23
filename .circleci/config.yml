@@ -20,8 +20,7 @@ jobs:
       - run: CI=true npm run jest-ci # example:CI=true inject env variable CI = true
 workflows:
   version: 2
-  build_test_and_lint: # workflow name
+  test_and_lint: # workflow  name
     jobs:
-      - test:
-          requires: # test job require hithere job to finish and succed
-            - lint
+      - lint
+      - test

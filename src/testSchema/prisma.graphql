@@ -76,6 +76,7 @@ type User {
   username: String!
   email: String!
   password: String!
+  emailVerified: Boolean!
   updatedAt: DateTime!
   createdAt: DateTime!
 }
@@ -91,6 +92,7 @@ input UserCreateInput {
   username: String!
   email: String!
   password: String!
+  emailVerified: Boolean
 }
 
 type UserEdge {
@@ -109,6 +111,8 @@ enum UserOrderByInput {
   email_DESC
   password_ASC
   password_DESC
+  emailVerified_ASC
+  emailVerified_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -121,6 +125,7 @@ type UserPreviousValues {
   username: String!
   email: String!
   password: String!
+  emailVerified: Boolean!
   updatedAt: DateTime!
   createdAt: DateTime!
 }
@@ -148,6 +153,7 @@ input UserUpdateInput {
   username: String
   email: String
   password: String
+  emailVerified: Boolean
 }
 
 input UserUpdateManyMutationInput {
@@ -155,6 +161,7 @@ input UserUpdateManyMutationInput {
   username: String
   email: String
   password: String
+  emailVerified: Boolean
 }
 
 input UserWhereInput {
@@ -228,6 +235,8 @@ input UserWhereInput {
   password_not_starts_with: String
   password_ends_with: String
   password_not_ends_with: String
+  emailVerified: Boolean
+  emailVerified_not: Boolean
   updatedAt: DateTime
   updatedAt_not: DateTime
   updatedAt_in: [DateTime!]
