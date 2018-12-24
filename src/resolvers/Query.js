@@ -1,5 +1,6 @@
 import getUserId from '../utils/getUserId'
 import request from 'superagent'
+import throwError from '../utils/throwError'
 // import serverAcceptsEmail from 'server-accepts-email'
 
 const Query = {
@@ -49,16 +50,22 @@ const Query = {
       }/verify/${args.query}`
     )
 
-    if (emailExist.body.status !== 1) throw new Error('email is not exist')
+    if (emailExist.body.status !== 1) {
+      throwError(4001, 'invalid email, please use another email')
+    }
 
-    return prisma.query.user(
-      {
-        where: {
-          email: args.query,
+    return prisma.query
+      .user(
+        {
+          where: {
+            email: args.query,
+          },
         },
-      },
-      info
-    )
+        info
+      )
+      .catch((err) => {
+        throwError(4000, 'network failed', err)
+      })
   },
 }
 

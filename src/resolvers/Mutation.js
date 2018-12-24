@@ -3,6 +3,7 @@ import getUserId from '../utils/getUserId'
 import generateToken from '../utils/generateToken'
 import hashPassword from '../utils/hashPassword'
 import request from 'superagent'
+import throwError from '../utils/throwError'
 
 const Mutation = {
   async createUser(parent, args, { prisma }) {
@@ -11,26 +12,33 @@ const Mutation = {
       process.env.ENV === 'prod' ||
       process.env.ENV === 'dev'
     ) {
-      const recaptchaVerify = await request
+      const reCAPTCHAVerify = await request
         .post(
           `https://www.google.com/recaptcha/api/siteverify?secret=${
             process.env.RECAPTCHA_SECRET
-          }&response=${args.data.recaptchaToken}`
+          }&response=${args.data.reCAPTCHAToken}`
         )
         .catch((err) => {
-          throw new Error(err.message)
+          throwError(1000, undefined, err)
         })
-      if (recaptchaVerify.body.success !== true) {
-        throw new Error('recaptcha verification failed')
+      if (reCAPTCHAVerify.body.success !== true) {
+        throwError(1001, 'reCAPTCHA verification failed, please reCAPTCHA')
       }
-      await request
+      const validEmail = await request
         .post(`${process.env.SUBSCRIPTION_SERVER}`)
         .send(`EMAIL=${args.data.email}`)
         .catch((err) => {
-          throw new Error(err.message)
+          throwError(2000, undefined, err)
         })
+
+      if (validEmail.text.includes('invalid email')) {
+        throwError(
+          2001,
+          'the email is invalid or is a temporary email, please use another email'
+        )
+      }
     }
-    delete args.data.recaptchaToken
+    delete args.data.reCAPTCHAToken
     const password = await hashPassword(args.data.password)
     const user = await prisma.mutation
       .createUser({
@@ -40,7 +48,7 @@ const Mutation = {
         },
       })
       .catch((err) => {
-        throw new Error(err.message)
+        throwError(3000, undefined, err)
       })
 
     return {

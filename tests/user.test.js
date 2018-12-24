@@ -16,7 +16,7 @@ test('Should create a new user', async () => {
       email: 'andrew@example.com',
       password: 'MyPass123',
       username: 'Andrew',
-      recaptchaToken: '',
+      reCAPTCHAToken: '',
     },
   }
   const response = await client.mutate({
