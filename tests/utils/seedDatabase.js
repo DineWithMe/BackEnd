@@ -1,13 +1,14 @@
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
 import prisma from '../../src/prismaBinding'
+import generateToken from '../../src/utils/generateToken'
+import hashPassword from '../../src/utils/hashPassword'
 
 const userOne = {
   input: {
     name: 'jen',
-    email: 'jen123@example.com',
-    password: bcrypt.hashSync('Red098!@#$', bcrypt.genSaltSync(10)),
     username: 'jen',
+    email: 'jen@example.com',
+    password: hashPassword('Red098!@#$', true),
     emailVerified: false,
   },
   user: undefined,
@@ -17,9 +18,9 @@ const userOne = {
 const userTwo = {
   input: {
     name: 'jeff',
-    email: 'jeff123@example.com',
-    password: bcrypt.hashSync('PassForJeff', bcrypt.genSaltSync(10)),
     username: 'jeff',
+    email: 'jeff@example.com',
+    password: hashPassword('PassForJeff', true),
     emailVerified: false,
   },
   user: undefined,
@@ -35,13 +36,19 @@ const seedDatabase = async () => {
   userOne.user = await prisma.mutation.createUser({
     data: userOne.input,
   })
-  userOne.jwt = jwt.sign({ userId: userOne.user.id }, process.env.JWT_SECRET)
+  userOne.jwt = generateToken(
+    { userInfo: { userId: userOne.user.id, name: 'jen', username: 'jen' } },
+    process.env.JWT_SECRET
+  )
 
   // Create user two
   userTwo.user = await prisma.mutation.createUser({
     data: userTwo.input,
   })
-  userTwo.jwt = jwt.sign({ userId: userTwo.user.id }, process.env.JWT_SECRET)
+  userTwo.jwt = generateToken(
+    { userInfo: { userId: userTwo.user.id, name: 'jeff', username: 'jeff' } },
+    process.env.JWT_SECRET
+  )
 }
 
 export { seedDatabase as default, userOne, userTwo }
