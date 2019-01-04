@@ -7,6 +7,9 @@ import throwError from '../utils/throwError'
 
 const Mutation = {
   async createUser(parent, args, { prisma }) {
+    const {
+      data: { username, name, password, email, reCAPTCHAToken },
+    } = args
     if (
       process.env.ENV === 'test' ||
       process.env.ENV === 'prod' ||
@@ -16,7 +19,7 @@ const Mutation = {
         .post(
           `https://www.google.com/recaptcha/api/siteverify?secret=${
             process.env.RECAPTCHA_SECRET
-          }&response=${args.data.reCAPTCHAToken}`
+          }&response=${reCAPTCHAToken}`
         )
         .catch((err) => {
           throwError(1000, undefined, err)
@@ -26,7 +29,7 @@ const Mutation = {
       }
       const validEmail = await request
         .post(`${process.env.SUBSCRIPTION_SERVER}`)
-        .send(`EMAIL=${args.data.email}`)
+        .send(`EMAIL=${email}`)
         .catch((err) => {
           throwError(2000, undefined, err)
         })
@@ -38,22 +41,26 @@ const Mutation = {
         )
       }
     }
-    delete args.data.reCAPTCHAToken
-    const password = await hashPassword(args.data.password)
+    const hashedPassword = await hashPassword(password)
     const user = await prisma.mutation
       .createUser({
         data: {
-          ...args.data,
-          password,
+          username,
+          name,
+          email,
+          password: hashedPassword,
         },
       })
       .catch((err) => {
         throwError(3000, undefined, err)
       })
-
     return {
       user,
-      token: generateToken(user.id),
+      token: generateToken({
+        userId: user.id,
+        username: username,
+        name: name,
+      }),
     }
   },
   async login(parent, args, { prisma }) {
