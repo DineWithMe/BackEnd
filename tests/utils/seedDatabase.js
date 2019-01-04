@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt'
 import prisma from '../../src/prismaBinding'
 import generateToken from '../../src/utils/generateToken'
 import hashPassword from '../../src/utils/hashPassword'
