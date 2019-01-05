@@ -1,4 +1,4 @@
-const throwError = (statusCode, message, error) => {
+const throwError = (statusCode, error, message) => {
   // https://stackoverflow.com/questions/50954538/javascript-can-you-throw-an-object-in-an-error
   if (statusCode % 2 === 0) {
     message = 'network failed'

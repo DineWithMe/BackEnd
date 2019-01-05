@@ -8,16 +8,16 @@ import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
 /* eslint-disable no-alert, no-console */
 const getClient = (
-  jwt,
+  userToken,
   httpURL = process.env.NODE_ENDPOINT,
   websocketURL = `ws://localhost:${process.env.NODE_PORT}`
 ) => {
   // Setup the authorization header for the http client
   const request = async (operation) => {
-    if (jwt) {
+    if (userToken) {
       operation.setContext({
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${userToken}`,
         },
       })
     }
@@ -69,9 +69,9 @@ const getClient = (
       options: {
         reconnect: true,
         connectionParams: () => {
-          if (jwt) {
+          if (userToken) {
             return {
-              Authorization: `Bearer ${jwt}`,
+              Authorization: `Bearer ${userToken}`,
             }
           }
         },

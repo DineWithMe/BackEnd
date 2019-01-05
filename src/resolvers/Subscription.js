@@ -1,4 +1,4 @@
-// import getUserId from '../utils/getUserId'
+// import getDecodedToken from '../utils/getDecodedToken'
 
 // const Subscription = {}
 

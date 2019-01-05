@@ -1,6 +1,8 @@
-import getUserId from '../utils/getUserId'
+import getDecodedToken from '../utils/getDecodedToken'
+import generateToken from '../utils/generateToken'
 import request from 'superagent'
 import throwError from '../utils/throwError'
+import moment from 'moment'
 // import serverAcceptsEmail from 'server-accepts-email'
 
 const Query = {
@@ -24,16 +26,19 @@ const Query = {
 
     return prisma.query.users(opArgs, info)
   },
-  me(parent, args, { prisma, request }) {
-    const userId = getUserId(request)
+  me(parent, args, { prisma, request }, info) {
+    const userId = getDecodedToken(request).userId
 
-    return prisma.query.user({
-      where: {
-        id: userId,
+    return prisma.query.user(
+      {
+        where: {
+          id: userId,
+        },
       },
-    })
+      info
+    )
   },
-  async userExist(parent, args, { prisma }, info) {
+  userExist(parent, args, { prisma }, info) {
     return prisma.query.user(
       {
         where: {
@@ -44,28 +49,51 @@ const Query = {
     )
   },
   async emailExist(parent, args, { prisma }, info) {
-    const emailExist = await request.get(
-      `https://app.verify-email.org/api/v1/${
-        process.env.VERIFY_EMAIL_APIKEY
-      }/verify/${args.query}`
-    )
+    const emailExist = await request
+      .get(
+        `https://app.verify-email.org/api/v1/${
+          process.env.VERIFY_EMAIL_APIKEY
+        }/verify/${args.query}`
+      )
+      .catch((err) => {
+        throwError(4000, err)
+      })
 
     if (emailExist.body.status !== 1) {
       throwError(4001, 'invalid email, please use another email')
     }
 
-    return prisma.query
-      .user(
+    return prisma.query.user(
+      {
+        where: {
+          email: args.query,
+        },
+      },
+      info
+    )
+  },
+  verifyToken(parent, args, { prisma, request }, info) {
+    const decoded = getDecodedToken(request)
+    let { userId, userToken } = decoded
+    // refresh token if less then 7 days
+    if (decoded.exp - moment().format('X') < 86400 * 7) {
+      delete decoded.userToken
+      delete decoded.iat
+      delete decoded.exp
+      userToken = generateToken(decoded)
+    }
+
+    return {
+      user: prisma.query.user(
         {
           where: {
-            email: args.query,
+            id: userId,
           },
         },
         info
-      )
-      .catch((err) => {
-        throwError(4000, 'network failed', err)
-      })
+      ),
+      userToken: userToken,
+    }
   },
 }
 

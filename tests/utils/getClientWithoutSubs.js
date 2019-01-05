@@ -1,13 +1,13 @@
 import ApolloBoost from 'apollo-boost'
 
-const getClient = (jwt) => {
+const getClient = (userToken) => {
   return new ApolloBoost({
     uri: process.env.NODE_ENDPOINT,
     request(operation) {
-      if (jwt) {
+      if (userToken) {
         operation.setContext({
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${userToken}`,
           },
         })
       }

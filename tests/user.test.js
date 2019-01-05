@@ -23,6 +23,7 @@ test('Should create a new user', async () => {
     mutation: createUser,
     variables,
   })
+
   const exists = await prisma.exists.User({
     id: response.data.createUser.user.id,
   })
@@ -69,7 +70,7 @@ test('Should not signup user with invalid password', async () => {
 
 test('Should fetch user profile', async () => {
   jest.setTimeout(100000)
-  const client = getClient(userOne.jwt)
+  const client = getClient(userOne.userToken)
   const { data } = await client.query({ query: getProfile })
 
   expect(data.me.id).toBe(userOne.user.id)

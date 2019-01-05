@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import getUserId from '../utils/getUserId'
+import getDecodedToken from '../utils/getDecodedToken'
 import generateToken from '../utils/generateToken'
 import hashPassword from '../utils/hashPassword'
 import request from 'superagent'
@@ -15,23 +15,25 @@ const Mutation = {
       process.env.ENV === 'prod' ||
       process.env.ENV === 'dev'
     ) {
-      const reCAPTCHAVerify = await request
-        .post(
-          `https://www.google.com/recaptcha/api/siteverify?secret=${
-            process.env.RECAPTCHA_SECRET
-          }&response=${reCAPTCHAToken}`
-        )
-        .catch((err) => {
-          throwError(1000, undefined, err)
-        })
-      if (reCAPTCHAVerify.body.success !== true) {
-        throwError(1001, 'reCAPTCHA verification failed, please reCAPTCHA')
+      if (reCAPTCHAToken !== process.env.RECAPTCHA_BYPASS) {
+        const reCAPTCHAVerify = await request
+          .post(
+            `https://www.google.com/recaptcha/api/siteverify?secret=${
+              process.env.RECAPTCHA_SECRET
+            }&response=${reCAPTCHAToken}`
+          )
+          .catch((err) => {
+            throwError(1000, err)
+          })
+        if (reCAPTCHAVerify.body.success !== true) {
+          throwError(1001, 'reCAPTCHA verification failed, please reCAPTCHA')
+        }
       }
       const validEmail = await request
         .post(`${process.env.SUBSCRIPTION_SERVER}`)
         .send(`EMAIL=${email}`)
         .catch((err) => {
-          throwError(2000, undefined, err)
+          throwError(2000, err)
         })
 
       if (validEmail.text.includes('invalid email')) {
@@ -52,11 +54,11 @@ const Mutation = {
         },
       })
       .catch((err) => {
-        throwError(3000, undefined, err)
+        throwError(3000, err)
       })
     return {
       user,
-      token: generateToken({
+      userToken: generateToken({
         userId: user.id,
         username: username,
         name: name,
@@ -82,11 +84,11 @@ const Mutation = {
 
     return {
       user,
-      token: generateToken(user.id),
+      userToken: generateToken(user.id),
     }
   },
   async deleteUser(parent, args, { prisma, request }, info) {
-    const userId = getUserId(request)
+    const userId = getDecodedToken(request).userId
 
     return prisma.mutation.deleteUser(
       {
@@ -98,7 +100,7 @@ const Mutation = {
     )
   },
   async updateUser(parent, args, { prisma, request }, info) {
-    const userId = getUserId(request)
+    const userId = getDecodedToken(request).userId
 
     if (typeof args.data.password === 'string') {
       args.data.password = await hashPassword(args.data.password)
