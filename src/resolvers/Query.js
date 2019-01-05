@@ -72,9 +72,13 @@ const Query = {
       info
     )
   },
-  async verifyToken(parent, args, { request }, info) {
+  async verifyToken(parent, args, { prisma, request }) {
     const decoded = getDecodedToken(request)
     let { userToken } = decoded
+
+    if (!(await prisma.exists.User({ username: decoded.username }))) {
+      throwError(6001, 'user not exist')
+    }
     // refresh token if less then 7 days
     if (decoded.exp - moment().format('X') < 86400 * 7) {
       delete decoded.userToken
