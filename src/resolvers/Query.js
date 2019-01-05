@@ -72,9 +72,9 @@ const Query = {
       info
     )
   },
-  verifyToken(parent, args, { prisma, request }, info) {
+  async verifyToken(parent, args, { request }, info) {
     const decoded = getDecodedToken(request)
-    let { userId, userToken } = decoded
+    let { userToken } = decoded
     // refresh token if less then 7 days
     if (decoded.exp - moment().format('X') < 86400 * 7) {
       delete decoded.userToken
@@ -82,17 +82,8 @@ const Query = {
       delete decoded.exp
       userToken = generateToken(decoded)
     }
-
     return {
-      user: prisma.query.user(
-        {
-          where: {
-            id: userId,
-          },
-        },
-        info
-      ),
-      userToken: userToken,
+      userToken,
     }
   },
 }
