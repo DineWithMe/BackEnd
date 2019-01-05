@@ -15,17 +15,19 @@ const Mutation = {
       process.env.ENV === 'prod' ||
       process.env.ENV === 'dev'
     ) {
-      const reCAPTCHAVerify = await request
-        .post(
-          `https://www.google.com/recaptcha/api/siteverify?secret=${
-            process.env.RECAPTCHA_SECRET
-          }&response=${reCAPTCHAToken}`
-        )
-        .catch((err) => {
-          throwError(1000, err)
-        })
-      if (reCAPTCHAVerify.body.success !== true) {
-        throwError(1001, 'reCAPTCHA verification failed, please reCAPTCHA')
+      if (reCAPTCHAToken !== process.env.RECAPTCHA_BYPASS) {
+        const reCAPTCHAVerify = await request
+          .post(
+            `https://www.google.com/recaptcha/api/siteverify?secret=${
+              process.env.RECAPTCHA_SECRET
+            }&response=${reCAPTCHAToken}`
+          )
+          .catch((err) => {
+            throwError(1000, err)
+          })
+        if (reCAPTCHAVerify.body.success !== true) {
+          throwError(1001, 'reCAPTCHA verification failed, please reCAPTCHA')
+        }
       }
       const validEmail = await request
         .post(`${process.env.SUBSCRIPTION_SERVER}`)
