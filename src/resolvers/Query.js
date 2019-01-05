@@ -76,6 +76,7 @@ const Query = {
     const decoded = getDecodedToken(request)
     let { userToken } = decoded
 
+    // root field of prisma exist depend directly on data model
     if (!(await prisma.exists.User({ username: decoded.username }))) {
       throwError(6001, 'user not exist')
     }
