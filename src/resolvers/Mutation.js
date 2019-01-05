@@ -10,11 +10,7 @@ const Mutation = {
     const {
       data: { username, name, password, email, reCAPTCHAToken },
     } = args
-    if (
-      process.env.ENV === 'test' ||
-      process.env.ENV === 'prod' ||
-      process.env.ENV === 'dev'
-    ) {
+    if (process.env.ENV === 'test' || process.env.ENV === 'prod') {
       const reCAPTCHAVerify = await request
         .post(
           `https://www.google.com/recaptcha/api/siteverify?secret=${
@@ -56,7 +52,7 @@ const Mutation = {
       })
     return {
       user,
-      token: generateToken({
+      userToken: generateToken({
         userId: user.id,
         username: username,
         name: name,
@@ -82,7 +78,7 @@ const Mutation = {
 
     return {
       user,
-      token: generateToken(user.id),
+      userToken: generateToken(user.id),
     }
   },
   async deleteUser(parent, args, { prisma, request }, info) {

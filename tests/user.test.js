@@ -70,7 +70,7 @@ test('Should not signup user with invalid password', async () => {
 
 test('Should fetch user profile', async () => {
   jest.setTimeout(100000)
-  const client = getClient(userOne.token)
+  const client = getClient(userOne.userToken)
   const { data } = await client.query({ query: getProfile })
 
   expect(data.me.id).toBe(userOne.user.id)

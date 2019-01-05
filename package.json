@@ -87,6 +87,7 @@
     "graphql": "^0.13.2",
     "graphql-yoga": "^1.16.7",
     "jsonwebtoken": "^8.4.0",
+    "moment": "^2.23.0",
     "prisma-binding": "^2.2.1",
     "server-accepts-email": "^1.11.1",
     "subscriptions-transport-ws": "^0.9.15",

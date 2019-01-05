@@ -1,13 +1,13 @@
 import ApolloBoost from 'apollo-boost'
 
-const getClient = (token) => {
+const getClient = (userToken) => {
   return new ApolloBoost({
     uri: process.env.NODE_ENDPOINT,
     request(operation) {
-      if (token) {
+      if (userToken) {
         operation.setContext({
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${userToken}`,
           },
         })
       }

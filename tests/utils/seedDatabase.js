@@ -11,7 +11,7 @@ const userOne = {
     emailVerified: false,
   },
   user: undefined,
-  token: undefined,
+  userToken: undefined,
 }
 
 const userTwo = {
@@ -23,7 +23,7 @@ const userTwo = {
     emailVerified: false,
   },
   user: undefined,
-  token: undefined,
+  userToken: undefined,
 }
 
 const seedDatabase = async () => {
@@ -35,7 +35,7 @@ const seedDatabase = async () => {
   userOne.user = await prisma.mutation.createUser({
     data: userOne.input,
   })
-  userOne.token = generateToken(
+  userOne.userToken = generateToken(
     { userId: userOne.user.id, name: 'jen', username: 'jen' },
     process.env.JWT_SECRET
   )
@@ -44,7 +44,7 @@ const seedDatabase = async () => {
   userTwo.user = await prisma.mutation.createUser({
     data: userTwo.input,
   })
-  userTwo.token = generateToken(
+  userTwo.userToken = generateToken(
     { userId: userTwo.user.id, name: 'jeff', username: 'jeff' },
     process.env.JWT_SECRET
   )

@@ -7,11 +7,11 @@ const getUserId = (request, requireAuth = true) => {
     : request.connection.context.Authorization
 
   if (header) {
-    const token = header.replace('Bearer ', '')
+    const userToken = header.replace('Bearer ', '')
     let decoded
     try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET)
-      decoded.token = token
+      decoded = jwt.verify(userToken, process.env.JWT_SECRET)
+      decoded.userToken = userToken
       return decoded
     } catch (err) {
       throwError(5000, 'Authentication failed', err)
