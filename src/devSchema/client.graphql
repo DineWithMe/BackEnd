@@ -11,7 +11,7 @@ type Query {
   me: User!
   userExist(query: String): User
   emailExist(query: String): User
-  verifyToken: AuthPayload!
+  verifyToken: userToken!
 }
 
 type Mutation {
@@ -28,6 +28,10 @@ type Mutation {
 type AuthPayload {
   userToken: String!
   user: User!
+}
+
+type userToken {
+  userToken: String!
 }
 
 input CreateUserInput {
