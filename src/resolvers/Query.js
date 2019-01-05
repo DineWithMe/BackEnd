@@ -1,6 +1,8 @@
 import getDecodedToken from '../utils/getDecodedToken'
+import generateToken from '../utils/generateToken'
 import request from 'superagent'
 import throwError from '../utils/throwError'
+import moment from 'moment'
 // import serverAcceptsEmail from 'server-accepts-email'
 
 const Query = {
@@ -67,7 +69,15 @@ const Query = {
     )
   },
   verifyToken(parent, args, { prisma, request }, info) {
-    const { userId, token } = getDecodedToken(request)
+    const decoded = getDecodedToken(request)
+    let { userId, userToken } = decoded
+    // refresh token if less then 7 days
+    if (decoded.exp - moment().format('X') < 86400 * 7) {
+      delete decoded.userToken
+      delete decoded.iat
+      delete decoded.exp
+      userToken = generateToken(decoded)
+    }
 
     return {
       user: prisma.query.user(
@@ -78,7 +88,7 @@ const Query = {
         },
         info
       ),
-      token: token,
+      userToken: userToken,
     }
   },
 }
