@@ -16,14 +16,13 @@ test('Should create a new user', async () => {
       email: 'andrew@example.com',
       password: 'MyPass123',
       username: 'Andrew',
-      recaptchaToken: '',
+      reCAPTCHAToken: '',
     },
   }
   const response = await client.mutate({
     mutation: createUser,
     variables,
   })
-
   const exists = await prisma.exists.User({
     id: response.data.createUser.user.id,
   })
@@ -58,6 +57,8 @@ test('Should not signup user with invalid password', async () => {
       name: 'Andrew',
       email: 'andrew@example.com',
       password: 'pass',
+      username: 'Andrew',
+      reCAPTCHAToken: '',
     },
   }
 
