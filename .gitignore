@@ -2,6 +2,7 @@
 node_modules/
 
 # environment
+.config/dev.env
 .config/prod.env
 .config/test.env
 Caddyfile
