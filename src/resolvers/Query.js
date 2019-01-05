@@ -1,4 +1,4 @@
-import getUserId from '../utils/getUserId'
+import getDecodedToken from '../utils/getDecodedToken'
 import request from 'superagent'
 import throwError from '../utils/throwError'
 // import serverAcceptsEmail from 'server-accepts-email'
@@ -24,16 +24,19 @@ const Query = {
 
     return prisma.query.users(opArgs, info)
   },
-  me(parent, args, { prisma, request }) {
-    const userId = getUserId(request)
+  me(parent, args, { prisma, request }, info) {
+    const userId = getDecodedToken(request).userId
 
-    return prisma.query.user({
-      where: {
-        id: userId,
+    return prisma.query.user(
+      {
+        where: {
+          id: userId,
+        },
       },
-    })
+      info
+    )
   },
-  async userExist(parent, args, { prisma }, info) {
+  userExist(parent, args, { prisma }, info) {
     return prisma.query.user(
       {
         where: {
@@ -54,18 +57,29 @@ const Query = {
       throwError(4001, 'invalid email, please use another email')
     }
 
-    return prisma.query
-      .user(
+    return prisma.query.user(
+      {
+        where: {
+          email: args.query,
+        },
+      },
+      info
+    )
+  },
+  verifyToken(parent, args, { prisma, request }, info) {
+    const { userId, token } = getDecodedToken(request)
+
+    return {
+      user: prisma.query.user(
         {
           where: {
-            email: args.query,
+            id: userId,
           },
         },
         info
-      )
-      .catch((err) => {
-        throwError(4000, 'network failed', err)
-      })
+      ),
+      token: token,
+    }
   },
 }
 

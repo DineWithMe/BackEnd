@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import getUserId from '../utils/getUserId'
+import getDecodedToken from '../utils/getDecodedToken'
 import generateToken from '../utils/generateToken'
 import hashPassword from '../utils/hashPassword'
 import request from 'superagent'
@@ -86,7 +86,7 @@ const Mutation = {
     }
   },
   async deleteUser(parent, args, { prisma, request }, info) {
-    const userId = getUserId(request)
+    const userId = getDecodedToken(request).userId
 
     return prisma.mutation.deleteUser(
       {
@@ -98,7 +98,7 @@ const Mutation = {
     )
   },
   async updateUser(parent, args, { prisma, request }, info) {
-    const userId = getUserId(request)
+    const userId = getDecodedToken(request).userId
 
     if (typeof args.data.password === 'string') {
       args.data.password = await hashPassword(args.data.password)

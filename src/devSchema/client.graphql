@@ -11,6 +11,7 @@ type Query {
   me: User!
   userExist(query: String): User
   emailExist(query: String): User
+  verifyToken: AuthPayload!
 }
 
 type Mutation {
