@@ -10,7 +10,11 @@ const Mutation = {
     const {
       data: { username, name, password, email, reCAPTCHAToken },
     } = args
-    if (process.env.ENV === 'test' || process.env.ENV === 'prod') {
+    if (
+      process.env.ENV === 'test' ||
+      process.env.ENV === 'prod' ||
+      process.env.ENV === 'dev'
+    ) {
       const reCAPTCHAVerify = await request
         .post(
           `https://www.google.com/recaptcha/api/siteverify?secret=${
@@ -18,7 +22,7 @@ const Mutation = {
           }&response=${reCAPTCHAToken}`
         )
         .catch((err) => {
-          throwError(1000, undefined, err)
+          throwError(1000, err)
         })
       if (reCAPTCHAVerify.body.success !== true) {
         throwError(1001, 'reCAPTCHA verification failed, please reCAPTCHA')
@@ -27,7 +31,7 @@ const Mutation = {
         .post(`${process.env.SUBSCRIPTION_SERVER}`)
         .send(`EMAIL=${email}`)
         .catch((err) => {
-          throwError(2000, undefined, err)
+          throwError(2000, err)
         })
 
       if (validEmail.text.includes('invalid email')) {
@@ -48,7 +52,7 @@ const Mutation = {
         },
       })
       .catch((err) => {
-        throwError(3000, undefined, err)
+        throwError(3000, err)
       })
     return {
       user,

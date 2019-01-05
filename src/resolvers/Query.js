@@ -49,11 +49,15 @@ const Query = {
     )
   },
   async emailExist(parent, args, { prisma }, info) {
-    const emailExist = await request.get(
-      `https://app.verify-email.org/api/v1/${
-        process.env.VERIFY_EMAIL_APIKEY
-      }/verify/${args.query}`
-    )
+    const emailExist = await request
+      .get(
+        `https://app.verify-email.org/api/v1/${
+          process.env.VERIFY_EMAIL_APIKEY
+        }/verify/${args.query}`
+      )
+      .catch((err) => {
+        throwError(4000, err)
+      })
 
     if (emailExist.body.status !== 1) {
       throwError(4001, 'invalid email, please use another email')
