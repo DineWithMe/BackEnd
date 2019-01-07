@@ -6,7 +6,7 @@ import moment from 'moment'
 // import serverAcceptsEmail from 'server-accepts-email'
 
 const Query = {
-  users(parent, args, { prisma }, info) {
+  async users(parent, args, { prisma }, info) {
     const opArgs = {
       first: args.first,
       skip: args.skip,
@@ -23,7 +23,9 @@ const Query = {
         ],
       }
     }
-
+    // prisma.query.users(opArgs, info) return only requested field
+    // prisma.query.users(opArgs) return all scalar field
+    // if we return prisma.query.users(opArgs), graphql yoga will return it as if prisma.query.users(opArgs, info)
     return prisma.query.users(opArgs, info)
   },
   me(parent, args, { prisma, request }, info) {
@@ -76,6 +78,7 @@ const Query = {
     const decoded = getDecodedToken(request)
     let { userToken } = decoded
 
+    // root field of prisma exist depend directly on data model
     if (!(await prisma.exists.User({ username: decoded.username }))) {
       throwError(6001, 'user not exist')
     }
