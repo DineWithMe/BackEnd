@@ -9,6 +9,10 @@ Caddyfile
 
 # production
 dist/
+./src/devSchema/prisma.graphql
+./src/testSchema/prisma.graphql
+./src/prodSchema/prisma.graphql
+
 
 # misc
 .DS_Store

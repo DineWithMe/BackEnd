@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import getDecodedToken from '../utils/getDecodedToken'
 import generateToken from '../utils/generateToken'
 import hashPassword from '../utils/hashPassword'
