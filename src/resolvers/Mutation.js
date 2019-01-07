@@ -31,12 +31,13 @@ const Mutation = {
       }
       const validEmail = await request
         .post(`${process.env.SUBSCRIPTION_SERVER}`)
-        .send(`EMAIL=${email}`)
+        .send(`EMAIL=${email}`) // sending form data
         .catch((err) => {
           throwError(2000, err)
         })
 
       if (validEmail.text.includes('invalid email')) {
+        // this is a hacky way to check whether mail chimp reject the email for some reason
         throwError(
           2001,
           'the email is invalid or is a temporary email, please use another email'
@@ -71,7 +72,6 @@ const Mutation = {
         email: args.data.email,
       },
     })
-
     if (!user) {
       throw new Error('Unable to login')
     }
