@@ -21,7 +21,7 @@ const getUserId = (request, requireAuth = true) => {
   if (requireAuth) {
     throwError(5001, 'Authentication required')
   }
-  // return object rathe than null since it is now return object
+  // return object rather than null since it is now return object
   return {}
 }
 
