@@ -48,9 +48,9 @@ const Mutation = {
     const user = await prisma.mutation
       .createUser({
         data: {
-          username,
+          username: username.toLowerCase(),
           name,
-          email,
+          email: email.toLowerCase(),
           password: hashedPassword,
         },
       })
@@ -67,24 +67,43 @@ const Mutation = {
     }
   },
   async login(parent, args, { prisma }) {
-    const user = await prisma.query.user({
-      where: {
-        email: args.data.email,
-      },
-    })
+    const {
+      data: { emailOrUsername, password },
+    } = args
+    const users = await prisma.query
+      .users({
+        where: {
+          OR: [
+            {
+              email: emailOrUsername.toLowerCase(),
+            },
+            {
+              username: emailOrUsername.toLowerCase(),
+            },
+          ],
+        },
+      })
+      .catch((err) => {
+        throwError(7000, err)
+      })
+    const user = users[0]
     if (!user) {
-      throw new Error('Unable to login')
+      throwError(7001, 'username or password mismatch')
     }
 
-    const isMatch = await bcrypt.compare(args.data.password, user.password)
+    const isMatch = await bcrypt.compare(password, user.password)
 
     if (!isMatch) {
-      throw new Error('Unable to login')
+      throwError(7001, 'username or password mismatch')
     }
-
+    const { id, name, username } = user
     return {
       user,
-      userToken: generateToken(user.id),
+      userToken: generateToken({
+        userId: id,
+        username: username,
+        name: name,
+      }),
     }
   },
   async deleteUser(parent, args, { prisma, request }, info) {
