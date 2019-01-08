@@ -81,13 +81,13 @@ const Mutation = {
     if (!isMatch) {
       throw new Error('Unable to login')
     }
-
+    const { id, name, username } = user
     return {
       user,
       userToken: generateToken({
-        userId: user.id,
-        username: user.username,
-        name: user.name,
+        userId: id,
+        username: username,
+        name: name,
       }),
     }
   },
