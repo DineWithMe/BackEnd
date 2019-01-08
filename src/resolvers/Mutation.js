@@ -84,7 +84,11 @@ const Mutation = {
 
     return {
       user,
-      userToken: generateToken(user.id),
+      userToken: generateToken({
+        userId: user.id,
+        username: user.username,
+        name: user.name,
+      }),
     }
   },
   async deleteUser(parent, args, { prisma, request }, info) {
