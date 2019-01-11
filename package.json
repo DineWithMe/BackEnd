@@ -92,6 +92,7 @@
     "server-accepts-email": "^1.11.1",
     "subscriptions-transport-ws": "^0.9.15",
     "superagent": "^4.1.0",
+    "uuid": "^3.3.2",
     "validator": "^10.10.0"
   },
   "devDependencies": {
