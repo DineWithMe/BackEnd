@@ -19,10 +19,10 @@ type Mutation {
   login(data: LoginUserInput!): AuthPayload!
   deleteUser: User!
   updateUser(data: UpdateUserInput!): User!
+  uploadFile(file: Upload!): File!
 }
 
 # type Subscription {
-
 # }
 
 type AuthPayload {
@@ -67,3 +67,11 @@ enum MutationType {
   UPDATED
   DELETED
 }
+
+type File {
+  filename: String!
+  mimetype: String!
+  encoding: String!
+}
+
+scalar Upload
