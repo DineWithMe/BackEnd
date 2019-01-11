@@ -136,9 +136,13 @@ const Mutation = {
       info
     )
   },
-  async uploadFile(parent, args) {
-    const { stream, filename } = await args.file
-    await storeUpload({ stream, filename })
+  async uploadUserAvatar(parent, args, { prisma, request }) {
+    const { stream, filename, mimetype, encoding } = await args.file
+    await storeUpload({
+      stream,
+      folder: `${process.cwd()}/user_avatar`,
+      filename,
+    })
     return { filename }
   },
 }

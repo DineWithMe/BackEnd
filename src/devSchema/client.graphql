@@ -19,7 +19,7 @@ type Mutation {
   login(data: LoginUserInput!): AuthPayload!
   deleteUser: User!
   updateUser(data: UpdateUserInput!): User!
-  uploadFile(file: Upload!): File!
+  uploadUserAvatar(file: Upload!): File!
 }
 
 # type Subscription {
