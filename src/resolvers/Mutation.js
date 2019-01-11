@@ -135,6 +135,10 @@ const Mutation = {
       info
     )
   },
+  async uploadFile(parent, args, { prisma, request }, info) {
+    console.log(args.file)
+    return { filename: 'hehe' }
+  },
 }
 
 export { Mutation as default }
