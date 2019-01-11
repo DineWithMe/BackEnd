@@ -137,13 +137,28 @@ const Mutation = {
     )
   },
   async uploadUserAvatar(parent, args, { prisma, request }) {
-    const { stream, filename, mimetype, encoding } = await args.file
-    await storeUpload({
-      stream,
+    const userId = getDecodedToken(request).userId
+    const { createReadStream, filename, mimetype, encoding } = await args.file
+    const avatarFilename = await storeUpload({
+      createReadStream,
       folder: `${process.cwd()}/user_avatar`,
       filename,
     })
-    return { filename }
+    await prisma.mutation.updateUser(
+      { where: { id: userId } },
+      {
+        data: {
+          avatarFilename,
+          avatarMimeType: mimetype,
+          avatarEncoding: encoding,
+        },
+      }
+    )
+    return {
+      avatarFilename,
+      avatarMimeType: mimetype,
+      avatarEncoding: encoding,
+    }
   },
 }
 
