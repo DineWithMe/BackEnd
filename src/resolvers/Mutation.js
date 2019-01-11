@@ -5,6 +5,7 @@ import hashPassword from '../utils/hashPassword'
 import request from 'superagent'
 import throwError from '../utils/throwError'
 import storeUpload from '../utils/storeUpload'
+import { unlink, existsSync } from 'fs'
 
 const Mutation = {
   async createUser(parent, args, { prisma }) {
@@ -138,22 +139,39 @@ const Mutation = {
   },
   async uploadUserAvatar(parent, args, { prisma, request }) {
     const userId = getDecodedToken(request).userId
+
     const { createReadStream, filename, mimetype, encoding } = await args.file
+
+    const folder = `${process.cwd()}/user_avatar`
+
+    const user = await prisma.query
+      .user({
+        where: { id: userId },
+      })
+      .catch((err) => throwError(9000, err))
+
+    if (user.avatarFilename && existsSync(`${folder}/${user.avatarFilename}`)) {
+      unlink(`${folder}/${user.avatarFilename}`, () => {}).catch((err) =>
+        throwError(9004, err)
+      )
+    }
+
     const avatarFilename = await storeUpload({
       createReadStream,
-      folder: `${process.cwd()}/user_avatar`,
+      folder,
       filename,
     })
-    await prisma.mutation.updateUser(
-      { where: { id: userId } },
-      {
+    await prisma.mutation
+      .updateUser({
+        where: { id: userId },
+
         data: {
           avatarFilename,
           avatarMimeType: mimetype,
           avatarEncoding: encoding,
         },
-      }
-    )
+      })
+      .catch((err) => throwError(9002, err))
     return {
       avatarFilename,
       avatarMimeType: mimetype,
