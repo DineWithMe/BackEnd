@@ -4,6 +4,7 @@ import generateToken from '../utils/generateToken'
 import hashPassword from '../utils/hashPassword'
 import request from 'superagent'
 import throwError from '../utils/throwError'
+import storeUpload from '../utils/storeUpload'
 
 const Mutation = {
   async createUser(parent, args, { prisma }) {
@@ -135,9 +136,11 @@ const Mutation = {
       info
     )
   },
-  async uploadFile(parent, args, { prisma, request }, info) {
-    console.log(args.file)
-    return { filename: 'hehe' }
+  async uploadFile(parent, args) {
+    const { stream, filename } = await args.file
+    await storeUpload({ stream, filename })
+    console.log(stream)
+    return { filename }
   },
 }
 
