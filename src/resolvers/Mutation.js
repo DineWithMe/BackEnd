@@ -139,7 +139,6 @@ const Mutation = {
   async uploadFile(parent, args) {
     const { stream, filename } = await args.file
     await storeUpload({ stream, filename })
-    console.log(stream)
     return { filename }
   },
 }
