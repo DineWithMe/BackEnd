@@ -6,6 +6,7 @@ import request from 'superagent'
 import throwError from '../utils/throwError'
 import storeUpload from '../utils/storeUpload'
 import { unlink, existsSync } from 'fs'
+import { USER_AVATAR } from '../constants/folder'
 
 const Mutation = {
   async createUser(parent, args, { prisma }) {
@@ -142,23 +143,22 @@ const Mutation = {
 
     const { createReadStream, filename, mimetype, encoding } = await args.file
 
-    const folder = `${process.cwd()}/user_avatar`
-
     const user = await prisma.query
       .user({
         where: { id: userId },
       })
       .catch((err) => throwError(9000, err))
 
-    if (user.avatarFilename && existsSync(`${folder}/${user.avatarFilename}`)) {
-      unlink(`${folder}/${user.avatarFilename}`, () => {}).catch((err) =>
-        throwError(9004, err)
-      )
+    const { avatarFilename } = user
+
+    if (avatarFilename && existsSync(`${USER_AVATAR}${avatarFilename}`)) {
+      // do not return promise, cannot use catch
+      unlink(`${USER_AVATAR}${avatarFilename}`, () => {})
     }
 
-    const avatarFilename = await storeUpload({
+    const uuidAvatarFilename = await storeUpload({
       createReadStream,
-      folder,
+      folder: USER_AVATAR,
       filename,
     })
     await prisma.mutation
@@ -166,7 +166,7 @@ const Mutation = {
         where: { id: userId },
 
         data: {
-          avatarFilename,
+          avatarFilename: uuidAvatarFilename,
           avatarMimeType: mimetype,
           avatarEncoding: encoding,
         },
