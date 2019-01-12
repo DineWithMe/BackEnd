@@ -84,6 +84,7 @@
     "apollo-utilities": "^1.0.27",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "express": "^4.16.4",
     "graphql": "^0.13.2",
     "graphql-yoga": "^1.16.9",
     "jsonwebtoken": "^8.4.0",
