@@ -3,7 +3,7 @@ import generateToken from '../utils/generateToken'
 import request from 'superagent'
 import throwError from '../utils/throwError'
 import moment from 'moment'
-// import serverAcceptsEmail from 'server-accepts-email'
+import { avatarExist } from '../utils/folderOperation'
 
 const Query = {
   async users(parent, args, { prisma }, info) {
@@ -30,8 +30,7 @@ const Query = {
   },
   me(parent, args, { prisma, request }, info) {
     const userId = getDecodedToken(request).userId
-
-    return prisma.query.user(
+    const user = prisma.query.user(
       {
         where: {
           id: userId,
@@ -39,9 +38,10 @@ const Query = {
       },
       info
     )
+    return avatarExist(user)
   },
-  user(parent, args, { prisma }, info) {
-    return prisma.query.user(
+  async user(parent, args, { prisma }, info) {
+    const user = await prisma.query.user(
       {
         where: {
           username: args.username,
@@ -49,8 +49,10 @@ const Query = {
       },
       info
     )
+    return avatarExist(user)
   },
   async emailExist(parent, args, { prisma }, info) {
+    // check whether the email truly belong to someone
     const emailExist = await request
       .get(
         `https://app.verify-email.org/api/v1/${
