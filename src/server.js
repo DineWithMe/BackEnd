@@ -30,6 +30,6 @@ server.express.post('/emailConfirmation', (req, res) => {
   emailConfirmation(req, res)
 })
 
-server.express.use('/userAvatar', express.static('user_avatar'))
+server.express.use('/user_avatar', express.static('user_avatar'))
 
 export { server as default }
