@@ -64,8 +64,8 @@ const Mutation = {
       user,
       userToken: generateToken({
         userId: user.id,
-        username: username,
-        name: name,
+        username,
+        name,
       }),
     }
   },
@@ -104,8 +104,8 @@ const Mutation = {
       user,
       userToken: generateToken({
         userId: id,
-        username: username,
-        name: name,
+        username,
+        name,
       }),
     }
   },
