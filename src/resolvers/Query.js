@@ -40,11 +40,11 @@ const Query = {
       info
     )
   },
-  userExist(parent, args, { prisma }, info) {
+  user(parent, args, { prisma }, info) {
     return prisma.query.user(
       {
         where: {
-          username: args.query,
+          username: args.username,
         },
       },
       info
@@ -68,7 +68,7 @@ const Query = {
     return prisma.query.user(
       {
         where: {
-          email: args.query,
+          email: args.email,
         },
       },
       info

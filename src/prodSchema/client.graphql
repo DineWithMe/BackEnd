@@ -9,7 +9,7 @@ type Query {
     orderBy: UserOrderByInput
   ): [User!]!
   me: User!
-  userExist(query: String): User
+  user(query: String): User
   emailExist(query: String): User
   verifyToken: AuthPayload
 }

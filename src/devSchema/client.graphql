@@ -9,8 +9,8 @@ type Query {
     orderBy: UserOrderByInput
   ): [User!]!
   me: User!
-  userExist(query: String): User
-  emailExist(query: String): User
+  user(username: String!): User
+  emailExist(email: String!): User
   verifyToken: AuthPayload
 }
 
@@ -58,6 +58,9 @@ type User {
   name: String!
   email: String
   username: String!
+  avatarFilename: String
+  avatarMimeType: String
+  avatarEncoding: String
   updatedAt: String!
   createdAt: String!
 }
