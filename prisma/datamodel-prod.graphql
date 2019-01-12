@@ -5,6 +5,9 @@ type User {
   email: String! @unique
   password: String!
   emailVerified: Boolean! @default(value: false)
+  avatarFilename: String @unique
+  avatarMimeType: String
+  avatarEncoding: String
   updatedAt: DateTime!
   createdAt: DateTime!
 }
