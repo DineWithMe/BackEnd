@@ -73,6 +73,7 @@ const Mutation = {
     const {
       data: { emailOrUsername, password },
     } = args
+
     const users = await prisma.query
       .users({
         where: {
@@ -89,6 +90,7 @@ const Mutation = {
       .catch((err) => {
         throwError(7000, err)
       })
+
     const user = users[0]
     if (!user) {
       throwError(7001, 'username or password mismatch')
@@ -100,13 +102,17 @@ const Mutation = {
       throwError(7001, 'username or password mismatch')
     }
     const { id, name, username } = user
+
     return {
       user,
-      userToken: generateToken({
-        userId: id,
-        username,
-        name,
-      }),
+      userToken: generateToken(
+        {
+          userId: id,
+          username,
+          name,
+        },
+        false
+      ),
     }
   },
   async deleteUser(parent, args, { prisma, request }, info) {
