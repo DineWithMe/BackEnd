@@ -14,7 +14,7 @@ const getUserId = (request, requireAuth = true) => {
       decoded.userToken = userToken
       return decoded
     } catch (err) {
-      throwError(5000, err)
+      requireAuth && throwError(5000, err)
     }
   }
 
