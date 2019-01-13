@@ -57,7 +57,7 @@ const Query = {
       .get(
         `https://app.verify-email.org/api/v1/${
           process.env.VERIFY_EMAIL_APIKEY
-        }/verify/${args.query}`
+        }/verify/${args.email}`
       )
       .catch((err) => {
         throwError(4000, err)
