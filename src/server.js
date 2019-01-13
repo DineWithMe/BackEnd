@@ -1,6 +1,7 @@
 import { GraphQLServer, PubSub } from 'graphql-yoga'
 import { resolvers, fragmentReplacements } from './resolvers/index'
 import { emailConfirmation } from './controller/emailConfirmation'
+import express from 'express'
 import bodyParser from 'body-parser'
 import prisma from './prismaBinding'
 
@@ -28,5 +29,7 @@ server.express.get('/emailConfirmation', (req, res) => {
 server.express.post('/emailConfirmation', (req, res) => {
   emailConfirmation(req, res)
 })
+
+server.express.use('/user_avatar', express.static('user_avatar'))
 
 export { server as default }

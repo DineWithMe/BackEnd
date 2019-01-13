@@ -4,6 +4,9 @@ import generateToken from '../utils/generateToken'
 import hashPassword from '../utils/hashPassword'
 import request from 'superagent'
 import throwError from '../utils/throwError'
+import storeUpload from '../utils/storeUpload'
+import { unlink, existsSync } from 'fs'
+import { USER_AVATAR } from '../constants/folder'
 
 const Mutation = {
   async createUser(parent, args, { prisma }) {
@@ -61,8 +64,8 @@ const Mutation = {
       user,
       userToken: generateToken({
         userId: user.id,
-        username: username,
-        name: name,
+        username,
+        name,
       }),
     }
   },
@@ -101,8 +104,8 @@ const Mutation = {
       user,
       userToken: generateToken({
         userId: id,
-        username: username,
-        name: name,
+        username,
+        name,
       }),
     }
   },
@@ -134,6 +137,46 @@ const Mutation = {
       },
       info
     )
+  },
+  async uploadUserAvatar(parent, args, { prisma, request }) {
+    const userId = getDecodedToken(request).userId
+
+    const { createReadStream, filename, mimetype, encoding } = await args.file
+
+    const user = await prisma.query
+      .user({
+        where: { id: userId },
+      })
+      .catch((err) => throwError(9000, err))
+
+    const { avatarFilename } = user
+
+    if (avatarFilename && existsSync(`${USER_AVATAR}${avatarFilename}`)) {
+      // do not return promise, cannot use catch
+      unlink(`${USER_AVATAR}${avatarFilename}`, () => {})
+    }
+
+    const uuidAvatarFilename = await storeUpload({
+      createReadStream,
+      folder: USER_AVATAR,
+      filename,
+    })
+    await prisma.mutation
+      .updateUser({
+        where: { id: userId },
+
+        data: {
+          avatarFilename: uuidAvatarFilename,
+          avatarMimeType: mimetype,
+          avatarEncoding: encoding,
+        },
+      })
+      .catch((err) => throwError(9002, err))
+    return {
+      avatarFilename,
+      avatarMimeType: mimetype,
+      avatarEncoding: encoding,
+    }
   },
 }
 

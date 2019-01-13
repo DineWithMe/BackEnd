@@ -17,3 +17,4 @@ src/prodSchema/prisma.graphql
 # misc
 .DS_Store
 experiment.js
+user_avatar

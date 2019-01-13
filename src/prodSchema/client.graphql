@@ -9,8 +9,8 @@ type Query {
     orderBy: UserOrderByInput
   ): [User!]!
   me: User!
-  userExist(query: String): User
-  emailExist(query: String): User
+  user(username: String!): User
+  emailExist(email: String!): User
   verifyToken: AuthPayload
 }
 
@@ -19,10 +19,10 @@ type Mutation {
   login(data: LoginUserInput!): AuthPayload!
   deleteUser: User!
   updateUser(data: UpdateUserInput!): User!
+  uploadUserAvatar(file: Upload!): UserAvatar!
 }
 
 # type Subscription {
-
 # }
 
 type AuthPayload {
@@ -58,6 +58,9 @@ type User {
   name: String!
   email: String
   username: String!
+  avatarFilename: String
+  avatarMimeType: String
+  avatarEncoding: String
   updatedAt: String!
   createdAt: String!
 }
@@ -67,3 +70,11 @@ enum MutationType {
   UPDATED
   DELETED
 }
+
+type UserAvatar {
+  avatarFilename: String!
+  avatarMimeType: String!
+  avatarEncoding: String!
+}
+
+scalar Upload
