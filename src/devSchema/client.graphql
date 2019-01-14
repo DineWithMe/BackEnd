@@ -51,6 +51,7 @@ input UpdateUserInput {
   name: String
   email: String
   password: String
+  userIntro: String
 }
 
 type User {
@@ -61,6 +62,7 @@ type User {
   avatarFilename: String
   avatarMimeType: String
   avatarEncoding: String
+  userIntro: String
   updatedAt: String!
   createdAt: String!
 }
@@ -78,3 +80,7 @@ type UserAvatar {
 }
 
 scalar Upload
+
+type UserIntro {
+  text: String!
+}

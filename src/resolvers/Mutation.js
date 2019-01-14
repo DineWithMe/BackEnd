@@ -170,7 +170,6 @@ const Mutation = {
     await prisma.mutation
       .updateUser({
         where: { id: userId },
-
         data: {
           avatarFilename: uuidAvatarFilename,
           avatarMimeType: mimetype,
