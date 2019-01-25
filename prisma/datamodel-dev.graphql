@@ -8,6 +8,10 @@ type User {
   avatarFilename: String @unique
   avatarMimeType: String
   avatarEncoding: String
+  userIntro: String
+    @default(
+      value: "<p> double click here to write something about yourself </p>"
+    )
   updatedAt: DateTime!
   createdAt: DateTime!
 }
